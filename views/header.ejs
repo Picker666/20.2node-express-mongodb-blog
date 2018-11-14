@@ -12,14 +12,19 @@
 		</header>
 
 		<nav>
-			<span><a title="hme" href="/">Home</a></span>
+			<span><a title="home" href="/">Home</a></span>
 			<% if (user) { %>
 				<span><a title="post" href="/post">post</a></span>
-				<span><a title="logout" href="/logout">logout</a></span>
+				<span><a title="logout" class="logout" href="/logout">logout</a></span>
 			<% } else { %>
 				<span><a title="login" href="/login">login</a></span>
 				<span><a title="register" href="/register">register</a></span>
 			<% } %>
 		</nav>
-
+		<% if (success) { %>
+			<div><%= success %></div>
+		<% } %>
+		<% if (error) { %>
+			<div><%= error %> </div>
+		<% } %>
 		<article>

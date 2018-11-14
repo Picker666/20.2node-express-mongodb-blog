@@ -26,17 +26,20 @@ var defaultRoute = function (app) {
 			name = req.session.user.name;
 		}
 	  	Post.get(name, function (err, posts) {
-	    if (err) {
-	    	posts = [];
-	    } 
-	    res.render('index', {
-	    	title: '主页',
-	    	user: req.session.user,
-	    	posts: posts,
-	    	success: req.flash('success').toString(),
-	    	error: req.flash('error').toString()
-	    });
-  });
+		    if (err) {
+		    	posts = [];
+		    } 
+		    console.log(posts);
+		    res.render('index', {
+		    	isLogin: !!name,
+		    	title: 'Home',
+		    	req: req,
+		    	user: req.session.user,
+		    	posts: posts,
+		    	success: req.flash('success').toString(),
+		    	error: req.flash('error').toString()
+		    });
+  		});
 	});
 
 	app.get('/login', checkNotLogin);
@@ -131,7 +134,7 @@ var defaultRoute = function (app) {
 	app.get('/post', checkLogin);
 	app.get('/post', function (req, res) {
 		res.render('post', {
-			title: '发表',
+			title: 'Publish',
 			user: req.session.user,
 			success: req.flash('success').toString(),
 			error: req.flash('error').toString()
