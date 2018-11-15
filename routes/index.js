@@ -125,7 +125,6 @@ var defaultRoute = function (app) {
 		req.session.user = null;
 		req.flash('success', '登出成功!');
 		res.redirect('/');//登出成功后跳转到主页
-	  	// res.render('logout', { title: 'Logout', user: false });
 	});
 
 	app.get('/post', checkLogin);
@@ -141,8 +140,8 @@ var defaultRoute = function (app) {
 
 	app.post('/post', checkLogin);
 	app.post('/post', function (req, res) {
-		var currentUser = req.session.user,
-	    	post = new Post(currentUser.name, req.body.title, req.body.post);
+		var currentUser = req.session.user;
+	    var post = new Post(currentUser.name, req.body.title, req.body.post);
 		post.save(function (err) {
 		    if (err) {
 		    	req.flash('error', err); 
@@ -157,7 +156,6 @@ var defaultRoute = function (app) {
 	app.get('/modify/:id', function (req, res) {
 		Post.find(req.params.id, function (err, posts) {
 		    if (err) {
-		    	console.log(posts, '=======', err);
 		    	posts = [];
 		    }
 		    console.log(posts);
@@ -173,8 +171,8 @@ var defaultRoute = function (app) {
 
 	app.post('/modify/:id', checkLogin);
 	app.post('/modify/:id', function (req, res) {
-  		var currentUser = req.session.user,
-	    	post = new Post(currentUser.name, req.body.title, req.body.post);
+  		var currentUser = req.session.user;
+	    var post = new Post(currentUser.name, req.body.title, req.body.post);
 		post.modify(req.params.id, function (err) {
 		    if (err) {
 		    	req.flash('error', err); 
