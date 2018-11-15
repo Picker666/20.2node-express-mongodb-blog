@@ -3,7 +3,6 @@ var crypto = require('crypto'),
     Post = require('../models/post.js');
 
 function checkLogin(req, res, next) {
-	console.log(req.session.user, '==========req.session.user===');
 	if (!req.session.user) {
 		req.flash('error', '未登录!'); 
 		res.redirect('/login');
@@ -29,11 +28,9 @@ var defaultRoute = function (app) {
 		    if (err) {
 		    	posts = [];
 		    } 
-		    console.log(posts);
 		    res.render('index', {
 		    	isLogin: !!name,
 		    	title: 'Home',
-		    	req: req,
 		    	user: req.session.user,
 		    	posts: posts,
 		    	success: req.flash('success').toString(),
@@ -136,6 +133,7 @@ var defaultRoute = function (app) {
 		res.render('post', {
 			title: 'Publish',
 			user: req.session.user,
+			posts: {},
 			success: req.flash('success').toString(),
 			error: req.flash('error').toString()
 		});
@@ -154,6 +152,38 @@ var defaultRoute = function (app) {
 	    res.redirect('/');//发表成功跳转到主页
 	  });
 	});
-}
+
+	app.get('/modify/:id', checkLogin);
+	app.get('/modify/:id', function (req, res) {
+		Post.find(req.params.id, function (err, posts) {
+		    if (err) {
+		    	console.log(posts, '=======', err);
+		    	posts = [];
+		    }
+		    console.log(posts);
+		    res.render('post', {
+				title: 'Modify',
+				user: req.session.user,
+				posts: posts[0],
+				success: req.flash('success').toString(),
+				error: req.flash('error').toString()
+			});
+  		});
+	});
+
+	app.post('/modify/:id', checkLogin);
+	app.post('/modify/:id', function (req, res) {
+  		var currentUser = req.session.user,
+	    	post = new Post(currentUser.name, req.body.title, req.body.post);
+		post.modify(req.params.id, function (err) {
+		    if (err) {
+		    	req.flash('error', err); 
+		    	return res.redirect('/');
+		    }
+		    req.flash('success', '更改成功!');
+		    res.redirect('/');//发表成功跳转到主页
+		});
+	});
+};
 
 module.exports = defaultRoute;

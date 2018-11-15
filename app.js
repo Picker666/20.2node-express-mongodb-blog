@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 var flash = require('connect-flash');
 
@@ -40,7 +41,30 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.post('/delete', function (request, response) {
+    // 使用body-parser
+    Post.remove({id: request.body.id}, function(err, result) {
+        response.end(JSON.stringify({status: 200}));
+    });
+
+    // 不使用body-parser中间件
+    // response.setHeader('Content-Type','text/html');
+    // var data = '';
+    // request.on('data', function(chunk){    
+    //     data += chunk;
+    // });
+    // 在end事件触发后，通过querystring.parse将post解析为真正的POST请求格式，然后向客户端返回。
+    // request.on('end', function(error){    
+        // Post.remove({id: data.split('=')[1]}, function(err, result) {
+        //     console.log(err, '=====', result);
+        //     response.end({status: 200});
+        // })
+    // });
+})
+
+
 indexRouter(app);
 // app.use('/users', usersRouter);
 
@@ -71,32 +95,5 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-
-
-// delete
-app.post('/del', function (request, response) {
-    console.log('=========');
-    res.setHeader('Content-Type','text/html');
-    console.log(request.body);
-    response.end('==');
-    // if (request.session.user) {
-    //   name = request.session.user.name;
-    // }
-    // Post.remove(name, function (err, posts) {
-    //     if (err) {
-    //         posts = [];
-    //     } 
-    //     console.log(posts);
-    //     res.render('index', {
-    //         isLogin: !!name,
-    //         title: 'Home',
-    //         user: request.session.user,
-    //         posts: posts,
-    //         success: request.flash('success').toString(),
-    //         error: request.flash('error').toString()
-    //     });
-    // });
-})
-
 
 module.exports = app;

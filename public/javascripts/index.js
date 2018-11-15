@@ -2,7 +2,7 @@
 * @Author: Administrator
 * @Date:   2018-11-13 14:07:23
 * @Last Modified by:   Administrator
-* @Last Modified time: 2018-11-14 18:36:23
+* @Last Modified time: 2018-11-15 14:30:39
 */
 
 'use strict';
@@ -18,7 +18,7 @@ eleAs.forEach(item => {
 });
 
 var deleteData = function(event, id) {
-	var xmlhttp;
+	var xmlhttp = '';
 	if (window.XMLHttpRequest) {
 		//  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
 		xmlhttp=new XMLHttpRequest();
@@ -27,10 +27,12 @@ var deleteData = function(event, id) {
 		xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
 	}
 	xmlhttp.onreadystatechange = function() {
-		if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-			document.innerHTML = xmlhttp.responseText;
+		if (xmlhttp.readyState==4) {
+			location.href = '/';
 		}
 	}
-	xmlhttp.open("POST", "/del", true);
-	xmlhttp.send();
+	xmlhttp.open("POST", "/delete", true);
+	xmlhttp.setRequestHeader('content-type','application/x-www-form-urlencoded');
+	xmlhttp.send('id=' + id);
+	// xmlhttp.send({id: id});
 }
