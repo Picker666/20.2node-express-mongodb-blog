@@ -66,7 +66,6 @@ var defaultRoute = function (app) {
 			}
 			//用户名密码都匹配后，将用户信息存入 session
 			req.session.user = user;
-			console.log(user, '=========');
 			req.flash('success', '登陆成功!');
 			res.redirect('/');//登陆成功后跳转到主页
 		});
@@ -75,7 +74,7 @@ var defaultRoute = function (app) {
 	app.get('/register', function (req, res) {
 		res.render('register', {
 		    title: 'Register',
-		    user: req.session && req.session.user || false,
+		    user: req.session && req.session.user || '',
 		    success: req.flash('success').toString(),
 		    error: req.flash('error').toString()
 		});
